@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Accedi | Bike Shop{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <h2>Accedi al tuo Account</h2>
+    <form method="POST" action="{{ url_for('auth.login') }}" class="login-form">
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+    {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control", placeholder="Inserisci la tua email") }}
+            {% for error in form.email.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+    </div>
+
+    <div class="mb-3">
+            {{ form.password.label(class="form-label") }}
+            {{ form.password(class="form-control", placeholder="Inserisci la password") }}
+            {% for error in form.password.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+    </div>
+
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+</form>
+</div>
+<div class="mt-3">
+
+    <p>Non hai un account? <a href="{{ url_for('auth.register') }}">Registrati</a>.</p>
+</div>
+{% endblock %}

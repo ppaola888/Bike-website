@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-order-details">
+    <h1 class="my-4">Dettagli Ordine #{{ order.id }}</h1>
+
+    <p><strong>Data:</strong> {{ order.date_ordered.strftime('%d-%m-%Y') }}</p>
+    <p><strong>Totale:</strong> {{ order.total_price }}€</p>
+    <p><strong>Stato:</strong> {{ order.status.value }}</p>
+
+    <h3>Prodotti Ordinati:</h3>
+    {% if order.order_products and order.order_products | length > 0 %}
+    <ul class="list-group">
+        {% for order_product in order.order_products %}
+            <li class="list-group-item">
+                <p><strong>{{ order_product.product.title }}</strong></p>
+                <p>Quantità: {{ order_product.quantity }}</p>
+                <p>Prezzo unitario: {{ order_product.price }}€</p>
+                 <p>Prezzo totale per questo prodotto: {{ order_product.quantity * order_product.price }}€</p>
+            </li>
+        {% endfor %}
+        </ul>
+        {% else %}
+                <p>Nessun prodotto ordinato trovato.</p>
+        {% endif %}
+
+    <h3>Indirizzo di Spedizione:</h3>
+    <p>{{ order.shipping_address }}</p>
+
+    <h3>Indirizzo di Fatturazione:</h3>
+    <p>{{ order.billing_address }}</p>
+
+    <a href="{{ url_for('views.orders') }}" class="btn btn-primary mt-3">Torna alla lista ordini</a>
+</div>
+{% endblock %}
+

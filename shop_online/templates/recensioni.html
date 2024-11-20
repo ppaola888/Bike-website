@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center vh-100">
+<div class="reviews-section">
+    <h5 class="mb-4">Recensioni per {{ product.title }}</h5>
+
+    {% if reviews_pagination.items %}
+    <ul class="recensioni-list list-unstyled">
+        {% for review in reviews_pagination.items %}
+        <li class="recensione-item mb-4">
+             <div class="recensione-header">
+            <strong>{{ review.user.username }}</strong>  {{ review.rating }}/5
+             </div>
+            <p>{{ review.comment }}</p>
+            <small>Pubblicato il {{ review.created_at.strftime('%d %B %Y') }}</small>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Pagination controls -->
+    <div class="pagination-container">
+        <ul class="pagination">
+            {% if reviews_pagination.has_prev %}
+            <li class="page-item">
+                <a href="{{ url_for('views.product_reviews', product_id=product.id, page=reviews_pagination.prev_num) }}" class="page-link">Precedente</a>
+            </li>
+            {% endif %}
+
+            {% for page_num in reviews_pagination.iter_pages() %}
+            {% if page_num %}
+            <li class="page-item {% if page_num == reviews_pagination.page %} active {% endif %}">
+                <a href="{{ url_for('views.product_reviews', product_id=product.id, page=page_num) }}" class="page-link">{{ page_num }}</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">…</span></li>
+            {% endif %}
+            {% endfor %}
+
+            {% if reviews_pagination.has_next %}
+            <li class="page-item">
+                <a href="{{ url_for('views.product_reviews', product_id=product.id, page=reviews_pagination.next_num) }}" class="page-link">Successivo</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+    {% else %}
+    <p>Non ci sono recensioni per questo prodotto.</p>
+    {% endif %}
+</div>
+</div>
+{% endblock %}

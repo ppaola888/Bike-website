@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-change-user">
+    <h2 class="title-change-user">Modifica Utente: {{ user.username }}</h2>
+
+    <form method="POST" action="{{ url_for('admin.update_user', user_id=user.id) }}">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+            {{ form.username.label(class="form-label") }}
+            {{ form.username(class="form-control") }}
+            {% for error in form.username.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control") }}
+            {% for error in form.email.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="form-check mb-3">
+            {{ form.is_admin.label(class="form-check-label") }}
+            {{ form.is_admin(class="form-check-input", checked=user.is_admin) }}
+        </div>
+
+        <button type="submit" class="btn btn-update-user">Aggiorna Utente</button>
+        <a href="{{ url_for('admin.users_list') }}" class="btn btn-delete-user">Annulla</a>
+    </form>
+</div>
+{% endblock %}

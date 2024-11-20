@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-cart">
+    <h1 class="text-center my-4">Il tuo Carrello</h1>
+
+    <!-- Messaggio se il carrello è vuoto -->
+    {% if not cart_details %}
+        <div class="alert alert-warning" role="alert">
+            {{ empty_message }}
+        </div>
+    {% else %}
+        <!-- Se ci sono prodotti nel carrello -->
+        <div class="row">
+            <div class="col-md-8">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Prodotto</th>
+                            <th scope="col">Quantità</th>
+                            <th scope="col">Prezzo</th>
+                            <th scope="col">Totale</th>
+                            <th scope="col">Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart_details %}
+                        <tr>
+                            <td>
+                                <a href="{{ url_for('views.product_item', product_id=item.product.id) }}">
+                                    <img src="{{ url_for('static', filename='images/' + item.product.image) }}" alt="{{ item.product.title }}" class="img-thumbnail">
+                                    {{ item.product.title }}
+                                </a>
+                                <p><strong>Colore:</strong> {{ item.product_attribute.color or "N/A" }}</p>
+                                <p><strong>Taglia:</strong> {{ item.product_attribute.size or "N/A" }}</p>
+                            </td>
+                            <td>
+                                <form action="{{ url_for('views.update_cart', item_id=item.id) }}" method="POST" class="d-inline">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" name="action" value="decrease" class="btn btn-decrease btn-cart">-</button>
+                                    <span class="mx-2 align-center">{{ item.quantity }}</span>
+                                    <button type="submit" name="action" value="increase" class="btn btn-increase btn-cart">+</button>
+                                </form>
+                            </td>
+                            <td>{{ item.product.price }} €</td>
+                            <td>{{ item.quantity * item.product.price }} €</td>
+                            <td>
+                                <form action="{{ url_for('views.remove_from_cart', item_id=item.id) }}" method="POST" class="d-inline">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn btn-danger btn-cart">Rimuovi</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card-summary">
+                    <div class="card-body">
+                        <h4 class="card-title">Riepilogo Ordine</h4>
+                        <p><strong>Totale articoli:</strong> {{ total_price }} €</p>
+                        <a href="{{ url_for('views.checkout') }}" class="btn btn-cart btn-checkout">Procedi al Checkout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+

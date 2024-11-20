@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-add-item">
+    <h1>Aggiungi un Nuovo Prodotto</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+            {{ form.title.label(class="form-label") }}
+            {{ form.title(class="form-control") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.description.label(class="form-label") }}
+            {{ form.description(class="form-control") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.current_price.label(class="form-label") }}
+            {{ form.current_price(class="form-control") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.previous_price.label(class="form-label") }}
+            {{ form.previous_price(class="form-control") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.quantity.label(class="form-label") }}
+            {{ form.quantity(class="form-control") }}
+        </div>
+
+        <div class="mb-3">
+          {{ form.stock.label(class="form-label") }}
+          {{ form.stock(class="form-control") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.category.label(class="form-label") }}
+            {{ form.category(class="form-select") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.attributes.color.label(class="form-label") }}
+            {{ form.attributes.color(class="form-control") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.attributes.size.label(class="form-label") }}
+            {{ form.attributes.size(class="form-control") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.flash_sale.label(class="form-label") }}
+            {{ form.flash_sale(class="form-check-input") }} <label class="form-check-label">Attiva</label>
+        </div>
+
+        <div class="mb-3">
+            {{ form.image.label(class="form-label") }}
+            {{ form.image(class="form-control") }}
+        </div>
+
+        <button type="submit" class="btn btn-add-product">Aggiungi Prodotto</button>
+    </form>
+
+     <div class="text-center mt-4">
+    <a href="{{ url_for('views.profilo') }}" class="btn btn-back-profile">Torna al Profilo</a>
+     </div>
+</div>
+{% endblock %}

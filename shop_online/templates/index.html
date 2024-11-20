@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}HOME | Bike shop{% endblock %}
+
+{%block content %}
+
+<div class="home-sections">
+<!-- HERO SECTION -->
+<section class="hero">
+  <div class="hero-content text-center">
+    <h1 class="hero-title">Benvenuto nel nostro Bike Shop</h1>
+    <p class="hero-paragraph">Scopri le migliori biciclette, accessori e offerte speciali.</p>
+    <a href="{{ url_for('views.view_products', category='offerte') }}" class="btn btn-primary">Scopri le Offerte</a>
+  </div>
+</section>
+
+<!-- ADVANTAGES SECTION -->
+<section class="advantages">
+   <div class="advantages-item">
+        <h3 class="advantages-heading">Spedizione Gratuita</h3>
+        <p class="advantages-text">Consegna gratuita per ordini superiori a 90€.</p>
+   </div>
+   <div class="advantages-item">
+        <h3 class="advantages-heading">Assistenza 24/7</h3>
+        <p class="advantages-text">Supporto clienti disponibile in ogni momento.</p>
+   </div>
+   <div class="advantages-item">
+        <h3 class="advantages-heading">Pagamenti Sicuri</h3>
+        <p class="advantages-text">Pagamenti tramite carte di credito, PayPal e Stripe.</p>
+   </div>
+</section>
+
+<!-- NEWSLETTER SECTION -->
+<section class="newsletter">
+  <div class="newsletter-content">
+    <h2 class="newsletter-heading">Iscriviti alla nostra Newsletter</h2>
+    <p class="newsletter-text">Ricevi aggiornamenti, offerte e novità direttamente nella tua inbox.</p>
+    <form action="{{ url_for('views.subscribe_newsletter') }}" method="POST">
+      <div class="input-group">
+        <input type="email" class="form-control" placeholder="Inserisci la tua email" aria-label="Email" aria-describedby="basic-addon2">
+        <button class="btn btn-newsletter" type="submit">Iscriviti</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- NEW ARRIVALS SECTION -->
+<section class="new-arrivals">
+    <h2 class="new-arrivals-heading">Nuovi Arrivi</h2>
+    <div class="product-grid">
+      {% for product in new_arrivals %}
+        <div class="product-card-new-arrivals">
+          <img src="{{ url_for('static', filename='images/' + product.image) }}" class="img-fluid" alt="{{ product.title }}">
+          <h5 class="new-arrivals-title">{{ product.title }}</h5>
+          <p class="new-arrivals-price">{{ product.price }} €</p>
+            <a href="{{ url_for('views.product_item', product_id=product.id) }}" class="btn btn-primary">Visualizza Prodotti</a>
+          </div>
+      {% endfor %}
+  </div>
+</section>
+</div>
+
+{% endblock %}

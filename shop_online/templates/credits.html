@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Crediti Immagini{% endblock %}
+
+{% block content %}
+<div class="credits">
+    <h1>Crediti Foto</h1>
+    <p>Voglio ringraziare i seguenti fotografi per le loro fantastiche foto:</p>
+    <ul>
+        <li>
+            <p>Foto di <a href="https://unsplash.com/@robertbye" target="_blank">Robert Bye</a> su <a href="https://unsplash.com" target="_blank">Unsplash</a></p>
+        </li>
+        <li>
+            <p>Foto di <a href="https://unsplash.com/@mikkelbech" target="_blank">Mikkel Bech</a> su <a href="https://unsplash.com" target="_blank">Unsplash</a>.</p>
+        </li>
+        <li>
+            <p>Foto di <a href="https://unsplash.com/@kaffeebart" target="_blank">Kaffeebart</a> su <a href="https://unsplash.com" target="_blank">Unsplash</a>.</p>
+        </li>
+        <li>
+            <p>Foto di <a href="https://unsplash.com/@hiboy" target="_blank">Hiboy</a> su <a href="https://unsplash.com" target="_blank">Unsplash</a>.</p>
+        </li>
+        <li>
+            <p>Foto di <a href="https://unsplash.com/@daikisato" target="_blank">Daiki Sato</a> su <a href="https://unsplash.com" target="_blank">Unsplash</a>.</p>
+        </li>
+
+        <a href="{{ url_for('views.index') }}">Torna alla Home</a>
+        </ul>
+</div>
+
+{% endblock %}

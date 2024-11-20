@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="wishlist-container text-center">
+<h2 class="wishlist-title">La tua Wishlist</h2>
+
+   <a href="{{ url_for('views.profilo') }}" class="btn btn-back-profile">Torna al Profilo</a>
+
+{% if wishlist_items %}
+  <div class="row">
+    {% for item in wishlist_items %}
+      <div class="col-md-3">
+        <div class="card mb-3">
+          <img src="{{ url_for('static', filename='images/' + item.product.image) }}" class="card-img-top" alt="{{ item.product.title }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ item.product.title }}</h5>
+            <p class="card-text">{{ item.product.description }}</p>
+            <a href="{{ url_for('views.product_item', product_id=item.product.id) }}" class="btn btn-wishlist-view">Visualizza prodotto</a>
+            <form action="{{ url_for('views.wishlist_remove', product_id=item.product.id) }}" method="POST" class="mt-2">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-wishlist-remove">Rimuovi dalla Wishlist</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- Pagination Links -->
+  <div class="pagination-container">
+    <ul class="pagination">
+      {% if wishlist_items.has_prev %}
+        <li class="page-item">
+          <a href="{{ url_for('views.wishlist', page=wishlist_items.prev_num) }}" class="page-link">Precedente</a>
+        </li>
+      {% endif %}
+
+      {% for page_num in wishlist_items.iter_pages() %}
+        {% if page_num %}
+          <li class="page-item {% if page_num == wishlist_items.page %} active {% endif %}">
+            <a href="{{ url_for('views.wishlist', page=page_num) }}" class="page-link">{{ page_num }}</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">…</span></li>
+        {% endif %}
+      {% endfor %}
+
+      {% if wishlist_items.has_next %}
+        <li class="page-item">
+          <a href="{{ url_for('views.wishlist', page=wishlist_items.next_num) }}" class="page-link">Successivo</a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+
+{% else %}
+  <p>Non hai prodotti nella tua wishlist.</p>
+{% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">Offerte Speciali</h1>
+
+    {% if products %}
+        <div class="row">
+            {% for product in products %}
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="card">
+                        <img src="{{ url_for('static', filename='images/' + product.image) }}" class="card-img-top" alt="{{ product.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.title }}</h5>
+                            <p class="card-text">Categoria: {{ product.category.value }}</p>
+
+                            {% if product.previous_price %}
+                                <p class="card-text">
+                                    <span class="text-muted"><del>{{ product.previous_price }}€</del></span>
+                                    <strong>{{ product.current_price }}€</strong>
+                                </p>
+                            {% else %}
+                                <p class="card-text"><strong>{{ product.current_price }}€</strong></p>
+                            {% endif %}
+
+                            <a href="{{ url_for('views.product_item', product_id=product.id) }}" class="btn btn-primary">Dettagli</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Non ci sono offerte al momento.</p>
+    {% endif %}
+</div>
+{% endblock %}

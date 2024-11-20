@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Risultati di ricerca{% endblock %}
+
+{% block content %}
+<div class="container-search-results">
+    <h2 class="title-search text-center">Risultati per: "{{ query }}"</h2>
+
+    {% if results.items %}
+        <div class="row">
+            {% for product in results.items %}
+                <div class="col-md-3 mb-4">
+                    <div class="card-search-results">
+                        <img src="{{ url_for('static', filename='images/' + product.image) }}" class="card-img-top" alt="{{ product.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.title }}</h5>
+                            <p class="card-text">{{ product.description[:100] }}...</p>
+                            <a href="{{ url_for('views.product_item', product_id=product.id) }}" class="btn btn-primary">Vedi prodotto</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination-->
+        <div class="pagination-container">
+            <ul class="pagination">
+                {% if results.has_prev %}
+                    <li class="page-item">
+                        <a href="{{ url_for('views.search', q=query, page=results.prev_num, type=search_type) }}" class="page-link">Precedente</a>
+                    </li>
+                {% endif %}
+
+                {% for page_num in results.iter_pages() %}
+                    {% if page_num %}
+                        <li class="page-item {% if page_num == results.page %} active {% endif %}">
+                            <a href="{{ url_for('views.search', q=query, page=page_num, type=search_type) }}" class="page-link">{{ page_num }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if results.has_next %}
+                    <li class="page-item">
+                        <a href="{{ url_for('views.search', q=query, page=results.next_num, type=search_type) }}" class="page-link">Successivo</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    {% else %}
+        <p>Nessun prodotto trovato.</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+

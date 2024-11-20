@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-list-users">
+    <h1 class="heading-list-users">Elenco Utenti</h1>
+
+     {% if current_user.is_admin %}
+    <table class="user-table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Ruolo</th>
+                <th>Azione</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ 'Admin' if user.is_admin else 'Utente' }}</td>
+                <td>
+                    <a href="{{ url_for('admin.update_user', user_id=user.id) }}" class="btn-update-user">Modifica</a>
+                    <form action="{{ url_for('admin.delete_user', user_id=user.id) }}" method="POST" class="d-inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn-delete-user">Elimina</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+     {% else %}
+    <p>Non hai i permessi per visualizzare questa sezione.</p>
+    {% endif %}
+
+    <a href="{{ url_for('views.profilo') }}" class="btn btn-back-profile">Torna al Profilo</a>
+
+</div>
+{% endblock %}

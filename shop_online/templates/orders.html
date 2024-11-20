@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-orders">
+    <h1 class="heading-orders">Ordini</h1>
+
+    {% if current_user.is_admin %}
+        <p><strong>Ordini di tutti gli utenti:</strong></p>
+
+    <a href="{{ url_for('views.profilo') }}" class="btn btn-back-profile">Torna al Profilo</a>
+        <div class="list-group-all-users">
+            {% for order in orders %}
+                <div class="list-group-item">
+                    <h5 class="order-id">Ordine ID: {{ order.id }}</h5>
+                    <p class="order-date">Data: {{ order.date_ordered.strftime('%d-%m-%Y') }}</p>
+                    <p class="order-total">Totale: {{ order.total_price }}€</p>
+                    <p class="order-status">Stato: {{ order.status }}</p>
+                    <a href="{{ url_for('views.order_details', order_id=order.id) }}" class="btn btn-order_details">Dettagli</a>
+
+                    <form action="{{ url_for('admin.delete_order', order_id=order.id) }}" method="POST" style="display:inline;">
+                        {{ delete_form.hidden_tag() }}
+                        <button type="submit" class="btn btn-delete-order">Elimina</button>
+                    </form>
+
+                </div>
+            {% endfor %}
+        </div>
+
+
+    <!-- Pagination for admin -->
+        <div class="pagination-container-orders">
+            <ul class="pagination">
+                {% if orders.has_prev %}
+                <li class="page-item">
+                    <a href="{{ url_for('views.all_orders', page=orders.prev_num) }}" class="page-link">Precedente</a>
+                </li>
+                {% endif %}
+
+                {% for page_num in orders.iter_pages() %}
+                {% if page_num %}
+                <li class="page-item {% if page_num == orders.page %} active {% endif %}">
+                    <a href="{{ url_for('views.orders', page=page_num) }}" class="page-link">{{ page_num }}</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">…</span></li>
+                {% endif %}
+                {% endfor %}
+
+                {% if orders.has_next %}
+                <li class="page-item">
+                    <a href="{{ url_for('views.orders', page=orders.next_num) }}" class="page-link">Successivo</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+
+    {% else %}
+        <p><strong>I Miei Ordini:</strong></p>
+        {% if orders %}
+
+    <a href="{{ url_for('views.profilo') }}" class="btn btn-back-profile">Torna al Profilo</a>
+
+            <div class="list-group-my-orders">
+                {% for order in orders %}
+                    <div class="list-group-item">
+                        <h5 class="order-id">Ordine ID: {{ order.id }}</h5>
+                        <p class="order-date">Data: {{ order.date_ordered.strftime('%d-%m-%Y') }}</p>
+                        <p class="order-total">Totale: {{ order.total_price }}€</p>
+                        <p class="order-status">Stato: {{ order.status }}</p>
+                        <a href="{{ url_for('views.order_details', order_id=order.id) }}" class="btn btn-order_details">Dettagli</a>
+                    </div>
+                {% endfor %}
+            </div>
+
+    <!-- Pagination for non-admin -->
+            <div class="pagination-container-orders">
+                <ul class="pagination">
+                    {% if orders.has_prev %}
+                    <li class="page-item">
+                        <a href="{{ url_for('views.orders', page=orders.prev_num) }}" class="page-link">Precedente</a>
+                    </li>
+                    {% endif %}
+
+                    {% for page_num in orders.iter_pages() %}
+                    {% if page_num %}
+                    <li class="page-item {% if page_num == orders.page %} active {% endif %}">
+                        <a href="{{ url_for('views.orders', page=page_num) }}" class="page-link">{{ page_num }}</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">…</span></li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if orders.has_next %}
+                    <li class="page-item">
+                        <a href="{{ url_for('views.orders', page=orders.next_num) }}" class="page-link">Successivo</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        {% else %}
+            <p>Non hai effettuato nessun ordine.</p>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}
+

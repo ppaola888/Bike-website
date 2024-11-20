@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-management-products">
+    <h1 class="management-products text-center">Gestione Prodotti</h1>
+
+     {% if current_user.is_admin %}
+     <div class="text-center">
+    <a href="{{ url_for('admin.add_items') }}" class="btn btn-primary mb-3">Aggiungi Nuovo Prodotto</a>
+         </div>
+    {% endif %}
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Immagine</th>
+                <th>Titolo</th>
+                <th>Prezzo</th>
+                <th>Quantità</th>
+                <th>Categoria</th>
+                <th>Azioni</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if products %}
+                {% for product in products %}
+                    <tr>
+                        <td>{{ product.id }}</td>
+                        <td><img src="{{ url_for('static', filename='media/' + product.image) }}" width="50" height="50"></td>
+                        <td>{{ product.title }}</td>
+                        <td>{{ product.current_price }}</td>
+                        <td>{{ product.quantity }}</td>
+                        <td>{{ product.category }}</td>
+                        <td>
+                            <a href="{{ url_for('admin.update_item', product_id=product.id) }}" class="btn btn-warning btn-sm">Modifica</a>
+                            <form action="{{ url_for('admin.delete_item', product_id=product.id) }}" method="POST" class="d-inline">
+                                  {{ form.hidden_tag() }}
+                                <button type="submit" class="btn btn-delete btn-sm">Elimina</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="7" class="text-center">Nessun prodotto trovato</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+     <div class="text-center mt-4">
+    <a href="{{ url_for('views.profilo') }}" class="btn btn-back-profile">Torna al Profilo</a>
+     </div>
+</div>
+{% endblock %}

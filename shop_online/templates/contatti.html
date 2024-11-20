@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Contatti{% endblock %}
+
+{% block content %}
+<div class="container contact-page">
+    <div class="contact-wrapper">
+<h2 class="contact-title text-center">Contattaci</h2>
+<p>Compila il modulo sottostante per metterti in contatto con noi.</p>
+
+      <!-- Display Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == 'danger' %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-bs-dismiss="alert">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-bs-dismiss="alert">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+  <form action="{{ url_for('views.contatti') }}" method="POST" class="contact-form">
+       {{ form.hidden_tag() }}
+
+      <div class="mb-3">
+                {{ form.name.label(class="form-label") }}
+                {{ form.name(class="form-control", placeholder="Il tuo nome") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-control", placeholder="Inserisci la tua email") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.subject.label(class="form-label") }}
+                {{ form.subject(class="form-control", placeholder="Oggetto") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.message.label(class="form-label") }}
+                {{ form.message(class="form-control", placeholder="Il tuo messaggio", rows=4) }}
+            </div>
+
+            <button type="submit" class="btn btn-contact-us">Invia</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

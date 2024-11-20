@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-single-product">
+    {% if is_single_product %}
+        <!-- Single Product View -->
+        <div class="row">
+            <div class="col">
+                <div class="card-single-product">
+                    <img src="{{ url_for('static', filename='images/' + product.image) }}" class="card-img-top" alt="{{ product.title }}">
+                    <div class="card-body-single-product">
+                        <h5 class="card-title-single-product text-center">{{ product.title }}</h5>
+                        <p class="card-text-single-product text-center">{{ product.description }}</p>
+                        <p class="card-price-single-product text-center">€{{ product.current_price }}</p>
+                        {% if product.previous_price %}
+                        <p class="card-text text-muted"><del>€{{ product.previous_price }}</del></p>
+                        {% endif %}
+
+                        {% if product.attributes %}
+                        <div class="product-attributes-single-product">
+                            <form method="POST" action="{{ url_for('views.add_to_cart', product_id=product.id, attribute_id=product.attributes[0].id) }}">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <div class="form-group">
+                                    <label for="size">Taglia:</label>
+                                    <select name="size" class="form-control" id="size">
+                                        {% for attribute in product.attributes %}
+                                        <option value="{{ attribute.size }}">{{ attribute.size }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="color">Colore:</label>
+                                    <select name="color" class="form-control" id="color">
+                                        {% for attribute in product.attributes %}
+                                        <option value="{{ attribute.color }}">{{ attribute.color }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="quantity">Quantità:</label>
+                                    <input type="number" name="quantity" class="form-control" id="quantity" value="1" min="1" max="{{ product.quantity }}">
+                                </div>
+                                <div class="product-actions d-flex justify-content-center mt-3">
+                                    <form method="POST" action="{{ url_for('views.add_to_cart', product_id=product.id, attribute_id=product.attributes[0].id) }}">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                                    <button type="submit" class="add-to-cart-btn">Aggiungi al carrello</button>
+                                    </form>
+                                    <!-- Wishlist Button -->
+                                        <form method="POST" action="{{ url_for('views.wishlist_add', product_id=product.id) }}">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                             <input type="hidden" name="product_id" value="{{ product.id }}">
+                                            <button type="submit" class="add-to-wishlist-btn">Aggiungi alla Wishlist</button>
+                                        </form>
+                                    </div>
+                            </form>
+                        </div>
+                        {% endif %}
+
+                        {% if product.content %}
+                        <div class="product-content text-center">
+                            <h6>Dettagli Prodotto</h6>
+                            <p>{{ product.content }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shipping, delivery and return information -->
+        <div class="info mt-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="info-text-center">
+                    <i class="bi bi-truck"></i>
+                    <p class="info-content">Spedizione gratuita da 99 €</p>
+                </div>
+                <div class="info-text-center">
+                    <i class="bi bi-box-fill"></i>
+                    <p class="info-content">Consegna 3-5 giorni lavorativi</p>
+                </div>
+                <div class="info-text-center">
+                    <i class="bi bi-arrow-repeat"></i>
+                    <p class="info-content">Reso fino a 365 giorni</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reviews Section -->
+        <div class="recensioni-container mt-4">
+            <h5 class="text-center">Recensioni dei Clienti</h5>
+            {% if reviews_pagination.items %}
+            <ul class="list-unstyled recensioni-list">
+                {% for review in reviews_pagination.items %}
+                <li class="recensione-item mb-4 p-3">
+                    <div class="recensione-header d-flex justify-content-between align-items-center mb-2">
+                        {% if review.user %}
+                        <strong>{{ review.user.username }}</strong>
+                        {% else %}
+                        <strong>Anonimo</strong>
+                        {% endif %}
+                        <div class="rating">
+                            {% for i in range(1, 6) %}
+                            <span class="star {% if i <= review.rating %} filled {% endif %}">&#9733;</span>
+                            {% endfor %}
+                            <span class="rating-number">{{ review.rating }}/5</span>
+                        </div>
+                    </div>
+                    <p class="recensione-comment">{{ review.comment }}</p>
+                </li>
+                {% endfor %}
+            </ul>
+
+            <!-- Pagination reviews -->
+            <div class="pagination-container">
+                <ul class="pagination">
+                    {% if reviews_pagination.has_prev %}
+                    <li class="page-item">
+                        <a href="{{ url_for('views.product_item', product_id=product.id, page=reviews_pagination.prev_num) }}" class="page-link">Precedente</a>
+                    </li>
+                    {% endif %}
+
+                    {% for page_num in reviews_pagination.iter_pages() %}
+                    {% if page_num %}
+                    <li class="page-item {% if page_num == reviews_pagination.page %} active {% endif %}">
+                        <a href="{{ url_for('views.product_item', product_id=product.id, page=page_num) }}" class="page-link">{{ page_num }}</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">…</span></li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if reviews_pagination.has_next %}
+                    <li class="page-item">
+                        <a href="{{ url_for('views.product_item', product_id=product.id, page=reviews_pagination.next_num) }}" class="page-link">Successivo</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            {% else %}
+            <p class="no-reviews">Nessuna recensione disponibile per questo prodotto.</p>
+            {% endif %}
+        </div>
+
+        <!-- Add Section Review-->
+        <div class="add-recensione mt-4">
+            <h5 class="title-add-recensione text-center">Aggiungi una Recensione</h5>
+            <form method="POST" action="{{ url_for('views.product_reviews', product_id=product.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="form-group">
+                    <label for="rating">Voto (1-5):</label>
+                    <select name="rating" class="form-control" id="rating" required>
+                        <option value="5">5</option>
+                        <option value="4">4</option>
+                        <option value="3">3</option>
+                        <option value="2">2</option>
+                        <option value="1">1</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="comment">Recensione:</label>
+                    <textarea name="comment" class="form-control" id="comment" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="send-to-review-btn">Invia Recensione</button>
+            </form>
+        </div>
+
+    {% else %}
+        <!-- Category Products View -->
+        <div class="category-product-row">
+            {% for product in products %}
+            <div class="mb-4">
+                <div class="category-card">
+                    <img src="{{ url_for('static', filename='images/' + product.image) }}" class="card-img-top" alt="{{ product.title }}">
+                    <div class="category-card-body">
+                        <h5 class="category-card-title">{{ product.title }}</h5>
+                        <p class="category-card-product-price">€{{ product.current_price }}</p>
+                        <a href="{{ url_for('views.product_item', product_id=product.id) }}" class="view-product-btn">Visualizza</a>
+                        <!-- Wishlist Button -->
+                        <div class="category-card-wishlist">
+                            <form method="POST" action="{{ url_for('views.wishlist_add', product_id=product.id) }}">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <input type="hidden" name="product_id" value="{{ product.id }}">
+                                <button type="submit" class="add-to-wishlist-icon">
+                                    <i class="bi bi-heart"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Product pagination -->
+        <div class="pagination-container-products">
+            <ul class="pagination">
+                {% if pagination.has_prev %}
+                <li class="page-item">
+                    <a href="{{ url_for('views.view_products', category=category, page=pagination.prev_num) }}" class="page-link">Precedente</a>
+                </li>
+                {% endif %}
+
+                {% for page_num in pagination.iter_pages() %}
+                {% if page_num %}
+                <li class="page-item {% if page_num == pagination.page %} active {% endif %}">
+                    <a href="{{ url_for('views.view_products', category=category, page=page_num) }}" class="page-link">{{ page_num }}</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">…</span></li>
+                {% endif %}
+                {% endfor %}
+
+                {% if pagination.has_next %}
+                <li class="page-item">
+                    <a href="{{ url_for('views.view_products', category=category, page=pagination.next_num) }}" class="page-link">Successivo</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

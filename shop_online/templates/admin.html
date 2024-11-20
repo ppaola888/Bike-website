@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-profile">
+    <h1 class="heading-profile text-center">Benvenuto, {{ current_user.username }}</h1>
+    <div class="row">
+        {% if current_user.is_admin %}
+        <!-- Admin Section -->
+        <div class="card-wrapper">
+            <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="card card-admin">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Gestisci Prodotti</h5>
+                    <p class="card-text">Aggiungi, modifica o elimina i prodotti disponibili.</p>
+                    <div class="mt-auto">
+                        <a href="{{ url_for('admin.display_items') }}" class="btn btn-primary">Visualizza Prodotti</a>
+                        <a href="{{ url_for('admin.add_items') }}" class="btn btn-secondary">Aggiungi Nuovo Prodotto</a>
+                    </div>
+                </div>
+            </div>
+                </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="card card-admin">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Gestisci Utenti</h5>
+                    <p class="card-text">Visualizza e gestisci gli utenti registrati.</p>
+                    <div class="mt-auto">
+                        <a href="{{ url_for('admin.users_list') }}" class="btn btn-primary">Visualizza Utenti</a>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="card card-admin">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Gestisci Ordini</h5>
+                    <p class="card-text">Visualizza tutti gli ordini effettuati dai clienti.</p>
+                    <div class="mt-auto">
+                        <a href="{{ url_for('views.orders') }}" class="btn btn-primary">Visualizza Ordini</a>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="card card-admin">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title-password">Cambia Password</h5>
+                    <p class="card-text">Aggiorna la tua password.</p>
+                    <div class="mt-auto">
+                        <a href="{{ url_for('auth.change_password') }}" class="btn btn-primary">Cambia Password</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        {% else %}
+        <!-- Customer Section -->
+        <div class="card-wrapper">
+            <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="card card-user">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title-orders">I miei Ordini</h5>
+                    <p class="card-text">Visualizza gli ordini che hai effettuato nel nostro shop online.</p>
+                    <div class="mt-auto">
+                        <a href="{{ url_for('views.orders') }}" class="btn btn-primary">I miei Ordini</a>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="card card-user">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title-wishlist">La mia Wishlist</h5>
+                    <p class="card-text">Visualizza i prodotti che hai salvato nella tua lista dei desideri.</p>
+                    <div class="mt-auto">
+                        <a href="{{ url_for('views.wishlist') }}" class="btn btn-primary">Visualizza Wishlist</a>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="card card-user">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title-password">Cambia Password</h5>
+                    <p class="card-text">Aggiorna la tua password.</p>
+                    <div class="mt-auto">
+                        <a href="{{ url_for('auth.change_password') }}" class="btn btn-change-password">Cambia Password</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+
